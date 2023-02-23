@@ -10,7 +10,12 @@
   "author": "Amruthjith Sunil",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mysql2": "^3.1.2",
+    "sequelize": "^6.28.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
