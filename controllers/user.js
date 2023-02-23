@@ -10,11 +10,32 @@ exports.postUserSignup = async (req, res, next) => {
       password: password,
     });
     console.log("Added New User");
-    console.log(result.dataValues);
-    res.json(result);
+    res.send("Added New User");
   } catch (err) {
     console.log("Failed to add new user");
     console.log(err);
     res.json(err.errors[0].validatorKey);
+  }
+};
+
+exports.postUserLogin = async (req, res, next) => {
+  try {
+    console.log("logging in user");
+    const { email, password } = req.body;
+    const user = await User.findByPk(email);
+    if (user === null) {
+      console.log("User not found");
+      res.sendStatus(404);
+    } else {
+      if (user.password === password) {
+        console.log("User Login Successful");
+        res.send("User Login Successful");
+      } else {
+        console.log("User not authorized");
+        res.status(401).send("User not authorized");
+      }
+    }
+  } catch (error) {
+    console.log("Failed to login user");
   }
 };
