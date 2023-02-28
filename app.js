@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const app = express();
 
 const userRoute = require("./routes/user");
+const expenseRoute = require("./routes/expense");
 const sequelize = require("./utils/database");
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -12,9 +13,11 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use("/user", userRoute);
+app.use("/expense", expenseRoute);
 
-const syncDb = async (port) => {
+const syncDb = async () => {
   try {
+    const port = 3000;
     const result = await sequelize.sync();
     console.log("Database Synced");
     app.listen(port, () => {
@@ -25,4 +28,4 @@ const syncDb = async (port) => {
   }
 };
 
-syncDb(3000);
+syncDb();
