@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const User = require("./models/user");
+const Expense = require("./models/expense");
 
 const app = express();
 
@@ -14,6 +16,9 @@ app.use(cors());
 
 app.use("/user", userRoute);
 app.use("/expense", expenseRoute);
+
+User.hasMany(Expense);
+Expense.belongsTo(User);
 
 const syncDb = async () => {
   try {

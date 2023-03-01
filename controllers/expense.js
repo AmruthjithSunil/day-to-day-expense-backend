@@ -3,11 +3,12 @@ const Expense = require("../models/expense");
 exports.postExpense = async (req, res, next) => {
   try {
     console.log("Adding new expense");
-    const { amount, description, category } = req.body;
+    const { amount, description, category, userEmail } = req.body;
     const result = await Expense.create({
       amount: amount,
       description: description,
       category: category,
+      userEmail: userEmail,
     });
     console.log("Added New Expense");
     res.json(result);
@@ -21,7 +22,8 @@ exports.postExpense = async (req, res, next) => {
 exports.getExpense = async (req, res, next) => {
   try {
     console.log("Fetching all expenses");
-    const expenses = await Expense.findAll();
+    const userEmail = req.body.userEmail;
+    const expenses = await Expense.findAll({ where: { userEmail: userEmail } });
     res.json(expenses);
     console.log("Fetched all expenses");
   } catch (err) {
@@ -36,7 +38,11 @@ exports.deleteExpense = async (req, res, next) => {
     const id = req.params.id;
     console.log(`Deleting Expense with id:${id}`);
     const expense = await Expense.findByPk(id);
-    expense.destroy();
+    if (expense.dataValues.userEmail == req.body.userEmail)
+      await expense.destroy();
+    else {
+      console.log("Failed to delete expense (wrong email)");
+    }
     console.log(`Deleted Expense with id:${id}`);
     res.send();
   } catch (err) {

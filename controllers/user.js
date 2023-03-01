@@ -1,5 +1,10 @@
-const { User } = require("../models/user");
+const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+function generateAccessToken(userEmail) {
+  return jwt.sign({ userEmail: userEmail }, "shhhhh");
+}
 
 exports.postUserSignup = (req, res, next) => {
   try {
@@ -36,7 +41,11 @@ exports.postUserLogin = async (req, res, next) => {
       bcrypt.compare(password, user.password, (err, result) => {
         if (result) {
           console.log("User Login Successful");
-          res.send("User Login Successful");
+          //res.send("User Login Successful");
+          res.json({
+            message: "User Login Successful",
+            token: generateAccessToken(email),
+          });
         } else {
           console.log("User not authorized");
           res.status(401).send("User not authorized");
