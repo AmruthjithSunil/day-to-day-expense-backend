@@ -58,3 +58,14 @@ exports.postUserLogin = async (req, res, next) => {
     res.json(err.errors[0].validatorKey);
   }
 };
+
+exports.getIsPremium = async (req, res) => {
+  try {
+    const { userEmail } = req.body;
+    const user = await User.findByPk(userEmail);
+    console.log(userEmail);
+    res.json({ isPremium: user.isPremium });
+  } catch (error) {
+    console.log(error);
+  }
+};

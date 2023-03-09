@@ -27,37 +27,6 @@ exports.updateTransactionStatus = async (req, res) => {
   }
 };
 
-// exports.updateTransactionStatus = (req, res) => {
-//   try {
-//     const { payment_id, order_id } = req.body;
-//     Order.findOne({ where: { orderid: order_id } })
-//       .then((order) => {
-//         order
-//           .update({ paymentid: payment_id, status: "SUCCESSFUL" })
-//           .then(() => {
-//             req.user
-//               .update({ ispremiumuser: true })
-//               .then(() => {
-//                 return res
-//                   .status(202)
-//                   .json({ success: true, message: "Transaction Successful" });
-//               })
-//               .catch((err) => {
-//                 console.log(err);
-//               });
-//           })
-//           .catch((err) => {
-//             console.log(err);
-//           });
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
-
 exports.getPremium = (req, res, next) => {
   try {
     console.log("getting premium");
@@ -65,8 +34,8 @@ exports.getPremium = (req, res, next) => {
       key_id: process.env.KEY_ID,
       key_secret: process.env.KEY_SECRET,
     });
-    const amount = 2500;
-    rzp.orders.create({ amount, currency: "INR" }, (err, order) => {
+    const amount = 500;
+    rzp.orders.create({ amount: amount, currency: "INR" }, (err, order) => {
       if (err) {
         console.log(err);
       }

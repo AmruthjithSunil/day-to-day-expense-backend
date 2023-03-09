@@ -51,3 +51,12 @@ exports.deleteExpense = async (req, res, next) => {
     res.json(err.errors[0].validatorKey);
   }
 };
+
+exports.getUser = (req, res) => {
+  try {
+    console.log("sending user");
+    res.json({ userEmail: req.body.userEmail });
+  } catch (err) {
+    console.log(err);
+  }
+};
