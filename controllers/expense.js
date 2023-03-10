@@ -1,4 +1,5 @@
 const Expense = require("../models/expense");
+const User = require("../models/user");
 
 exports.postExpense = async (req, res, next) => {
   try {
@@ -10,6 +11,8 @@ exports.postExpense = async (req, res, next) => {
       category: category,
       userEmail: userEmail,
     });
+    const user = await User.findByPk(userEmail);
+    await user.update({ totalExpense: user.dataValues.totalExpense + amount });
     console.log("Added New Expense");
     res.json(result);
   } catch (err) {
