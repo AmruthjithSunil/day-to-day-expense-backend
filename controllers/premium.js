@@ -1,25 +1,23 @@
 const User = require("../models/user");
 const Expense = require("../models/expense");
+const sequelize = require("sequelize");
 
 exports.getLeaderboard = async (req, res) => {
-  console.log("getting userlist");
-  const users = await User.findAll({
-    attributes: ["email", "name"],
+  console.log("getting leaderboard");
+  const userlist = await User.findAll({
+    attributes: [
+      "name",
+      [sequelize.fn("sum", sequelize.col("expenses.amount")), "totalExpense"],
+    ],
+    include: [
+      {
+        model: Expense,
+        attributes: [],
+      },
+    ],
+    group: ["email"],
+    order: [["totalExpense", "DESC"]],
   });
-  const size = users.length;
-  let userlist = [];
-  for (let i = 0; i < size; i++) {
-    const user = users[i].dataValues;
-    const expenses = await Expense.findAll({
-      where: { userEmail: user.email },
-    });
-    let total = 0;
-    const size = expenses.length;
-    for (let i = 0; i < size; i++) {
-      total += expenses[i].dataValues.amount;
-    }
-    userlist.push({ name: user.name, totalExpense: total });
-  }
-  userlist.sort((a, b) => b.totalExpense - a.totalExpense);
-  res.json(userlist);
+  const users = userlist.map((user) => user.dataValues);
+  res.json(users);
 };
