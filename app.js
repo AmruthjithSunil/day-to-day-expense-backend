@@ -6,6 +6,7 @@ const User = require("./models/user");
 const Expense = require("./models/expense");
 const Order = require("./models/order");
 const ForgotPasswordRequest = require("./models/forgotPasswordRequest");
+const FileUrl = require("./models/fileUrl");
 
 const userRoute = require("./routes/user");
 const expenseRoute = require("./routes/expense");
@@ -36,10 +37,13 @@ Order.belongsTo(User);
 User.hasMany(ForgotPasswordRequest);
 ForgotPasswordRequest.belongsTo(User);
 
+User.hasMany(FileUrl);
+FileUrl.belongsTo(User);
+
 const syncDb = async () => {
   try {
     const port = 3000;
-    const result = await sequelize.sync();
+    await sequelize.sync();
     console.log("Database Synced");
     app.listen(port, () => {
       console.log(`Server listening at port: ${port}`);
