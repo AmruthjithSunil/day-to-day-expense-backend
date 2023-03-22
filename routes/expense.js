@@ -6,7 +6,7 @@ const auth = require("../middleware/auth");
 const router = express.Router();
 
 router.post("/", auth.authenticate, controller.postExpense);
-router.get("/", auth.authenticate, controller.getExpense);
+router.get("/page/:page", auth.authenticate, controller.getExpense);
 router.get("/download", auth.authenticate, controller.downloadExpense);
 router.get("/daily", auth.authenticate, controller.getDailyExpense);
 router.delete("/:id", auth.authenticate, controller.deleteExpense);

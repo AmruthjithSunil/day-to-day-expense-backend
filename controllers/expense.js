@@ -42,8 +42,16 @@ exports.getExpense = async (req, res, next) => {
   try {
     console.log("Fetching all expenses");
     const userEmail = req.body.userEmail;
+    const page = req.params.page;
+    const pageSize = req.header("PageSize");
+    console.log(page);
     const expenses = await Expense.findAll({ where: { userEmail: userEmail } });
-    res.json(expenses);
+    const lastPage = Math.floor(expenses.length / pageSize) + 1;
+    res.json({
+      expenses: expenses.slice((page - 1) * pageSize, page * pageSize),
+      page,
+      lastPage,
+    });
     console.log("Fetched all expenses");
   } catch (err) {
     console.log("Failed to get all expenses");
