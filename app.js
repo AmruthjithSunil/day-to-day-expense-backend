@@ -1,6 +1,10 @@
+const fs = require("fs");
+
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const compression = require("compression");
+const morgan = require("morgan");
 
 const User = require("./models/user");
 const Expense = require("./models/expense");
@@ -16,11 +20,15 @@ const passwordRoute = require("./routes/password");
 
 const sequelize = require("./utils/database");
 
+const accessLogStream = fs.createWriteStream("./access.log", { flags: "a" });
+
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
+app.use(compression());
+app.use(morgan("combined", { stream: accessLogStream }));
 
 app.use("/user", userRoute);
 app.use("/expense", expenseRoute);
@@ -42,7 +50,7 @@ FileUrl.belongsTo(User);
 
 const syncDb = async () => {
   try {
-    const port = 3000;
+    const port = process.env.PORT || 3000;
     await sequelize.sync();
     console.log("Database Synced");
     app.listen(port, () => {
